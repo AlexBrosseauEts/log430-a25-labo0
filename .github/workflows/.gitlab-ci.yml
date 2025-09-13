@@ -1,0 +1,52 @@
+stages:
+  - test
+  - deploy
+
+variables:
+  PYTHONDONTWRITEBYTECODE: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  DEPLOY_HOST: "10.194.32.219"
+  DEPLOY_USER: "log430"
+  DEPLOY_PASS: "fILYeGWJCGJuQTCB"
+
+test:
+  stage: test
+  image: python:3.12-slim
+  before_script:
+    - python --version
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+  script:
+    - pytest -q
+  artifacts:
+    when: always
+    paths:
+      - .pytest_cache/
+    reports:
+      junit: pytest-junit.xml
+  allow_failure: false
+
+deploy:
+  stage: deploy
+  image: debian:stable-slim
+  needs: ["test"]
+  before_script:
+    - apt-get update && apt-get install -y sshpass git
+  script:
+    - >
+      sshpass -p "$DEPLOY_PASS" ssh -o StrictHostKeyChecking=no
+      $DEPLOY_USER@$DEPLOY_HOST '
+        set -e
+        if [ ! -d ~/log430-a25-labo0 ]; then
+          git clone https://github.com/guteacher/log430-a25-labo0 ~/log430-a25-labo0
+        fi
+        cd ~/log430-a25-labo0
+        git pull --rebase
+        if ! command -v docker >/dev/null 2>&1; then
+          echo "Docker n est pas installé sur la VM" >&2
+          exit 1
+        fi
+        docker rm -f labo0-calculator || true
+        docker build -t labo0-calculator .
+        docker run -d --name labo0-calculator labo0-calculator
+      '
