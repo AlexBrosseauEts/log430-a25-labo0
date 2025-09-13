@@ -121,10 +121,22 @@ cd log430-a25-labo0
 
 >  📝 **NOTE** : N'oubliez pas d'installer Python, Docker et toutes les dépendances nécessaires sur le serveur de déploiement.
 
-Procédez ensuite à la mise en place de l’automatisation du déploiement continu (CD) dans la machine virtuelle à l’aide de GitLab et de scripts Bash. Les approches les plus courantes pour implémenter le CD consistent à effectuer le déploiement via SSH ou à utiliser un webhook. Vous trouverez ci-dessous quelques liens de réference :
+Procédez ensuite à la mise en place de l’automatisation du déploiement continu (CD) dans la machine virtuelle à l’aide de GitLab et de scripts Bash. Les approches les plus courantes pour implémenter le CD consistent à effectuer le déploiement via SSH ou à utiliser un webhook. Si votre SSH est protégé par mot de passe, vous devrez peut-être créer aussi un environnement et des secrets. Vous trouverez ci-dessous quelques liens de réference :
+
+SSH:
 - https://www.cyberciti.biz/faq/noninteractive-shell-script-ssh-password-provider/ 
+
+GitLab:
 - https://docs.gitlab.com/user/project/integrations/webhooks/#create-a-webhook
 - https://docs.gitlab.com/user/project/integrations/webhook_events/#job-events
+
+GitHub:
+- https://docs.github.com/en/webhooks
+- https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments#creating-an-environment
+- https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#creating-secrets-for-an-environment
+
+> ⚠️ IMPORTANT : Il n'est pas recommandé d'écrire les noms d'utilisateur et les mots de passe en « plain text » dans un script CI/CD. Veuiller utiliser les secrets dans GitHub/GitLab.
+
 
 > 💡 **Question 3** : Quel approache et quelles commandes avez-vous exécutées pour automatiser le déploiement continu de l'application dans la machine virtuelle ? Veuillez inclure les sorties du terminal et les scripts bash dans votre réponse.
 
